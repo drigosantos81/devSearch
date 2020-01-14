@@ -4,18 +4,9 @@ const Dev = require('./models/Dev');
 
 const routes = Router();
 
-// Métodos HTTP: get, post, put, delete
-
-// Tipos de parâmetros: 
-// Query Params: req.query (Filtros, ordenação, paginação...)
-// Routs Params: request.params (Identificar um recurso na alteração ou remoção)
-// Body: request.body (Dados para criação ou alteração de um registro)
-
-// MongoDB (Banco de dados Não-relacional)
-
 routes.post('/devs', async (request, response) => {
     // console.log(request.body);
-    const { github_username, techs } = request.body;
+    const { github_username, techs, latitude, longitude } = request.body;
 
     const apiResponse = await axios.get(`https://api.github.com/users/${github_username}`);
 
@@ -26,12 +17,18 @@ routes.post('/devs', async (request, response) => {
 
     const techsArray = techs.split(',').map(tech => tech.trim());
 
+    const location = {
+        type: 'Point',
+        coordinates: [longitude, latitude],
+    };
+
     const dev = await Dev.create({
         github_username,
         name,
         avatar_url,
         bio,
         techs: techsArray,
+        location,
     });
 
     return response.json(dev);

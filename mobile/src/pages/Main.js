@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image } from 'react-native';
-import MapView, { Marker, Callout, MapViewAnimated, Text } from 'react-native-maps';
+import { StyleSheet, Image, View, Text } from 'react-native';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 
-function Main() {
+function Main({ navigation }) {
     const [currentRegion, setCurrentRegion] = useState(null);
 
     useEffect(() => {
@@ -38,8 +38,14 @@ function Main() {
             <Marker coordinate={{ latitude: -12.9609619, longitude: -38.4953068}}>
                 <Image style={styles.avatar} source={{ uri: 'https://avatars3.githubusercontent.com/u/52610125?s=460&v=4' }} />
 
-                <Callout>
-
+                <Callout onPress={() => {
+                    navigation.navigate('Profile', { github_username: 'drigosantos81' });
+                }}>
+                    <View style={styles.callout}>
+                        <Text style={styles.devName}>Rodrigo Emanuel</Text>
+                        <Text style={styles.devBio}>Estudante de BI Analytics e Python/Java</Text>
+                        <Text style={styles.devTechs}>Python, Java, SQL</Text>
+                     </View>
                 </Callout>
             </Marker>
         </MapView>
@@ -56,8 +62,26 @@ const styles = StyleSheet.create({
         height: 54,
         borderRadius: 4,
         borderWidth: 4,
-        borderColor: '#FFF',
-    }
+        borderColor: '#FFF'
+    },
+
+    callout: {
+        width: 260,
+    },
+
+    devName: {
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+
+    devBio: {
+        color: '#666',
+        marginTop: 5,
+    },
+
+    devTechs: {
+        marginTop: 5,
+    },
 })
 
 export default Main;
